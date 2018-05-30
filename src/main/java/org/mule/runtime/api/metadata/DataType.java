@@ -72,7 +72,7 @@ public interface DataType extends Serializable {
    * This behaves in the same way as {@link #fromType(Class)} creating a {@link DataType} based on
    * the value type with default values being used for {@code mimeType} and {@code encoding} if
    * the Object type has no mimeType or encoding. The {@link DataTypeBuilder} used by default may
-   * introspect certain types that do contain type this meta-data such as
+   * createDefinition certain types that do contain type this meta-data such as
    * {@link javax.activation.DataHandler} and {@link javax.activation.DataSource} and populate
    * {@code mimeType} and {@code encoding} values based on this.
    *

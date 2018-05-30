@@ -26,12 +26,17 @@ import org.apache.commons.lang3.StringUtils;
  */
 public final class ModuleNamespace {
 
+  public static final String FQN_SEPARATOR = "::";
   private String[] elements;
 
   public ModuleNamespace(String... elements) {
     checkArgument(elements != null && elements.length > 0,
                   "Invalid namespace, at least one namespace identifier is required");
     this.elements = normalize(elements);
+  }
+
+  public static ModuleNamespace fromString(String name) {
+    return new ModuleNamespace(name.split(FQN_SEPARATOR));
   }
 
   /**
@@ -46,7 +51,7 @@ public final class ModuleNamespace {
   @Override
   public String toString() {
     return stream(elements)
-        .reduce((identity, accumulator) -> identity + "::" + accumulator)
+        .reduce((identity, accumulator) -> identity + FQN_SEPARATOR + accumulator)
         .orElse("");
   }
 
