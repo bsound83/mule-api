@@ -6,7 +6,6 @@
  */
 package org.mule.runtime.api.artifact.ast;
 
-import org.mule.runtime.api.artifact.sintax.SourceCodeLocation;
 import org.mule.runtime.api.meta.model.parameter.ParameterModel;
 
 public class ParameterAst {
@@ -18,6 +17,10 @@ public class ParameterAst {
 
   public ParameterValueAst getValue() {
     return value;
+  }
+
+  public SimpleParameterValueAst getValueAsSimpleParameterValueAst() {
+    return (SimpleParameterValueAst) value;
   }
 
   public ParameterModel getModel() {

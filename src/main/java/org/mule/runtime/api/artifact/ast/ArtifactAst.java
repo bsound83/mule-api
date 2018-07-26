@@ -9,7 +9,6 @@ package org.mule.runtime.api.artifact.ast;
 import static com.google.common.collect.ImmutableList.copyOf;
 import static java.util.Optional.ofNullable;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -17,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.mule.runtime.api.component.ComponentIdentifier;
 
@@ -24,14 +24,13 @@ public class ArtifactAst implements HasParametersAst {
 
   // TODO add artifact type like module/mule/policy, etc
   // TODO refactor to reuse code between this and ComponentAst
-  private Set<URL> configFiles = new HashSet<>(); // TODO temporary until we get rid of ApplicationModel
+  private Set<String> configFiles = new HashSet<>(); // TODO temporary until we get rid of ApplicationModel
   private boolean disableXmlValidations;// TODO temporary until we get rid of ApplicationModel
-  private Object configResources; // TODO remove
   private Map<ComponentIdentifier, ParameterAst> parametersMap = new HashMap<>();
   private List<ComponentAst> globalComponents;
   private String artifactType;
 
-  public Set<URL> getConfigFiles() {
+  public Set<String> getConfigFiles() {
     return configFiles;
   }
 
@@ -55,8 +54,10 @@ public class ArtifactAst implements HasParametersAst {
     return ofNullable(parametersMap.get(componentIdentifier));
   }
 
-  public Object getConfigResources() {
-    return configResources;
+  public List<ComponentAst> getAllGlobalComponentsById(ComponentIdentifier componentIdentifier) {
+    return getGlobalComponents().stream()
+        .filter(componentAst -> componentAst.getComponentIdentifier().equals(componentIdentifier))
+        .collect(Collectors.toList());
   }
 
   public static ArtifactBuilder builder() {
@@ -65,7 +66,7 @@ public class ArtifactAst implements HasParametersAst {
 
   public static final class ArtifactBuilder {
 
-    private Set<URL> configFiles = new HashSet<>(); // TODO temporary until we get rid of ApplicationModel
+    private Set<String> configFiles = new HashSet<>(); // TODO temporary until we get rid of ApplicationModel
     private String artifactType;
     private List<ComponentAst> globalComponents = new ArrayList<>();
     private boolean disableXmlValidations;
@@ -87,7 +88,8 @@ public class ArtifactAst implements HasParametersAst {
       return this;
     }
 
-    public ArtifactBuilder withConfigFiles(Set<URL> configFiles) {
+    // TODO remove
+    public ArtifactBuilder withConfigFiles(Set<String> configFiles) {
       this.configFiles.addAll(configFiles);
       return this;
     }
@@ -97,14 +99,9 @@ public class ArtifactAst implements HasParametersAst {
       return this;
     }
 
-
+    // TODO remove
     public ArtifactBuilder withDisableXmlValidations(boolean disableXmlValidations) {
       this.disableXmlValidations = disableXmlValidations;
-      return this;
-    }
-
-    public ArtifactBuilder withConfigResources(Object configResources) {
-      this.configResources = configResources;
       return this;
     }
 
@@ -115,7 +112,6 @@ public class ArtifactAst implements HasParametersAst {
       artifact.globalComponents = this.globalComponents;
       artifact.parametersMap = this.parametersMap;
       artifact.artifactType = this.artifactType;
-      artifact.configResources = this.configResources;
       return artifact;
     }
   }

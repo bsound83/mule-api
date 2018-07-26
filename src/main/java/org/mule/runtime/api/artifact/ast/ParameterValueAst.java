@@ -6,7 +6,6 @@
  */
 package org.mule.runtime.api.artifact.ast;
 
-import org.mule.runtime.api.artifact.sintax.SourceCodeLocation;
 import org.mule.runtime.api.component.location.BaseLocation;
 
 public class ParameterValueAst {

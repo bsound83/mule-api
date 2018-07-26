@@ -6,15 +6,25 @@
  */
 package org.mule.runtime.api.artifact.ast;
 
+import static com.google.common.collect.Streams.concat;
+import static java.util.stream.Collectors.toList;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class ComplexComponentAst extends ProcessorComponentAst {
+public abstract class ComplexComponentAst extends ProcessorComponentAst implements HasNestedComponentsAst {
 
-  List<ComponentAst> processorComponents;
+  List<ComponentAst> nestedComponentAst;
 
-  public List<ComponentAst> getProcessorComponents() {
-    return processorComponents;
+  public List<ComponentAst> getNestedComponentsAst() {
+    return nestedComponentAst;
+  }
+
+  @Override
+  public List<SimpleParameterValueAst> getNestedSimpleParameterValues() {
+    return concat(super.getNestedSimpleParameterValues().stream(), nestedComponentAst.stream()
+        .map(ComponentAst::getNestedSimpleParameterValues)
+        .flatMap(List::stream)).collect(toList());
   }
 
   ComplexComponentAst() {}
@@ -24,19 +34,19 @@ public abstract class ComplexComponentAst extends ProcessorComponentAst {
 
     List<ComponentAst> processorComponents = new ArrayList<>();
 
-    public ComplexComponentAstBuilder withProcessorComponents(List<ComponentAst> processorComponents) {
+    public ComplexComponentAstBuilder withNestedComponentsAst(List<ComponentAst> processorComponents) {
       this.processorComponents.addAll(processorComponents);
       return this;
     }
 
-    public ComplexComponentAstBuilder withProcessorComponent(ComponentAst processorComponent) {
+    public ComplexComponentAstBuilder withNestedComponentsAst(ComponentAst processorComponent) {
       this.processorComponents.add(processorComponent);
       return this;
     }
 
     public BuilderType build() {
       BuilderType complexComponent = super.build();
-      complexComponent.processorComponents = this.processorComponents;
+      complexComponent.nestedComponentAst = this.processorComponents;
       return complexComponent;
     }
   }

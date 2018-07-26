@@ -12,8 +12,8 @@ import static java.util.Optional.ofNullable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
-import org.mule.runtime.api.artifact.sintax.SourceCodeLocation;
 import org.mule.runtime.api.component.ComponentIdentifier;
 import org.mule.runtime.api.component.location.ComponentLocation;
 
@@ -52,6 +52,18 @@ public abstract class ComponentAst implements HasParametersAst {
   @Override
   public List<ParameterAst> getParameters() {
     return copyOf(parametersMap.values());
+  }
+
+  /**
+   * Provides access to all the {@link SimpleParameterValueAst} including the ones from nested components.
+   * 
+   * @return all the {@link SimpleParameterValueAst} including nested ones.
+   */
+  public List<SimpleParameterValueAst> getNestedSimpleParameterValues() {
+    return parametersMap.values().stream()
+        .filter(parameterAst -> parameterAst.getValue() instanceof SimpleParameterValueAst)
+        .map(parameterAst -> (SimpleParameterValueAst) parameterAst.getValue())
+        .collect(Collectors.toList());
   }
 
   public static abstract class ComponentAstBuilder<T extends ComponentAstBuilder, BuilderType extends ComponentAst> {

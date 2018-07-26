@@ -6,15 +6,26 @@
  */
 package org.mule.runtime.api.artifact.ast;
 
-import org.mule.runtime.api.artifact.sintax.SourceCodeLocation;
 import org.mule.runtime.api.component.location.BaseLocation;
+import org.mule.runtime.api.dsl.ConfigurationPropertyResolutionException;
+import org.mule.runtime.api.dsl.ResolvedValue;
+import org.mule.runtime.api.util.Either;
 
 public class SimpleParameterValueAst extends ParameterValueAst {
 
   private String rawValue;
+  private Either<ConfigurationPropertyResolutionException, ResolvedValue> resolvedValueResult;
 
   public String getRawValue() {
     return rawValue;
+  }
+
+  public Either<ConfigurationPropertyResolutionException, ResolvedValue> getResolvedValueResult() {
+    return resolvedValueResult;
+  }
+
+  public void setResolvedValueResult(Either<ConfigurationPropertyResolutionException, ResolvedValue> resolvedValueResult) {
+    this.resolvedValueResult = resolvedValueResult;
   }
 
   public static SimpleParameterValueAstBuilder builder() {

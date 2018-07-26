@@ -9,8 +9,6 @@ package org.mule.runtime.api.artifact.ast;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.mule.runtime.api.artifact.sintax.ComponentDefinition;
-import org.mule.runtime.api.artifact.sintax.SourceCodeLocation;
 import org.mule.runtime.api.meta.model.source.SourceCallbackModel;
 
 public class SourceResponseAst {
