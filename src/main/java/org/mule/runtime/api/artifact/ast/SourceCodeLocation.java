@@ -6,6 +6,8 @@
  */
 package org.mule.runtime.api.artifact.ast;
 
+import java.util.Objects;
+
 public class SourceCodeLocation {
 
   private int startLine;
@@ -43,6 +45,28 @@ public class SourceCodeLocation {
         + ", \"endColumn\":\"" + endColumn + "\""
         + ", \"filename\":\"" + filename + "\""
         + "}}";
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    SourceCodeLocation that = (SourceCodeLocation) o;
+    return getStartLine() == that.getStartLine() &&
+        getEndLine() == that.getEndLine() &&
+        getStartColumn() == that.getStartColumn() &&
+        getEndColumn() == that.getEndColumn() &&
+        Objects.equals(getFilename(), that.getFilename());
+  }
+
+  @Override
+  public int hashCode() {
+
+    return Objects.hash(getStartLine(), getEndLine(), getStartColumn(), getEndColumn(), getFilename());
   }
 
   public static SourceCodeLocationBuilder builder() {

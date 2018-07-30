@@ -23,6 +23,10 @@ public class ParameterAst {
     return (SimpleParameterValueAst) value;
   }
 
+  public ComplexParameterValueAst getValueAsComplexParameterValueAst() {
+    return (ComplexParameterValueAst) value;
+  }
+
   public ParameterModel getModel() {
     return model;
   }

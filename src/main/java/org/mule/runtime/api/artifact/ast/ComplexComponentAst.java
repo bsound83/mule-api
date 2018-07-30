@@ -6,25 +6,57 @@
  */
 package org.mule.runtime.api.artifact.ast;
 
-import static com.google.common.collect.Streams.concat;
+import static java.util.Collections.unmodifiableList;
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Stream.concat;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
+
+import org.mule.runtime.api.util.Pair;
+
+import com.google.common.collect.Streams;
 
 public abstract class ComplexComponentAst extends ProcessorComponentAst implements HasNestedComponentsAst {
 
   List<ComponentAst> nestedComponentAst;
+  private List<ComponentAst> allNestedComponentsAstRecursively;
+  private List<ComponentAst> allNestedComponentsAst;
 
   public List<ComponentAst> getNestedComponentsAst() {
     return nestedComponentAst;
   }
 
   @Override
-  public List<SimpleParameterValueAst> getNestedSimpleParameterValues() {
-    return concat(super.getNestedSimpleParameterValues().stream(), nestedComponentAst.stream()
+  public List<Pair<ComponentAst, SimpleParameterValueAst>> getNestedSimpleParameterValues() {
+    return Streams.concat(super.getNestedSimpleParameterValues().stream(), nestedComponentAst.stream()
         .map(ComponentAst::getNestedSimpleParameterValues)
         .flatMap(List::stream)).collect(toList());
+  }
+
+  @Override
+  public List<ComponentAst> getAllNestedComponentAstRecursively() {
+    if (allNestedComponentsAstRecursively == null) {
+      Stream<ComponentAst> currentComponentInnerAst = concat(super.getAllNestedComponentAstRecursively().stream(),
+                                                             nestedComponentAst.stream());
+      Stream<ComponentAst> innerComponentsInnerAsts = nestedComponentAst.stream()
+          .map(componentAst -> componentAst.getAllNestedComponentAstRecursively())
+          .flatMap(list -> list.stream());
+      allNestedComponentsAstRecursively =
+          unmodifiableList(concat(currentComponentInnerAst, innerComponentsInnerAsts).collect(toList()));
+    }
+    return allNestedComponentsAstRecursively;
+  }
+
+  @Override
+  public List<ComponentAst> getAllNestedComponentAst() {
+    if (allNestedComponentsAst == null) {
+      allNestedComponentsAst = unmodifiableList(concat(super.getAllNestedComponentAstRecursively().stream(),
+                                                       nestedComponentAst.stream())
+                                                           .collect(toList()));
+    }
+    return allNestedComponentsAst;
   }
 
   ComplexComponentAst() {}

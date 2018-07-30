@@ -7,6 +7,7 @@
 package org.mule.runtime.api.artifact.ast;
 
 import static com.google.common.collect.ImmutableList.copyOf;
+import static java.util.Collections.unmodifiableList;
 import static java.util.Optional.ofNullable;
 
 import java.util.Collection;
@@ -15,18 +16,32 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.mule.runtime.api.component.ComponentIdentifier;
+import org.mule.runtime.api.component.TypedComponentIdentifier;
 import org.mule.runtime.api.component.location.ComponentLocation;
+import org.mule.runtime.api.util.Pair;
+import org.mule.runtime.internal.dsl.DslConstants;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 
 //TODO remove HasParameters from this component
-public abstract class ComponentAst implements HasParametersAst {
+public abstract class ComponentAst implements HasParametersAst, HasNestedComponentsAst {
 
+  public static final ComponentIdentifier NAME_PARAMETER_IDENTIFIER =
+      ComponentIdentifier.builder().namespace(DslConstants.CORE_PREFIX).name("name").build();
   ComponentIdentifier componentIdentifier;
   Multimap<ComponentIdentifier, ParameterAst> parametersMap = ArrayListMultimap.create();
   ComponentLocation componentLocation;
   SourceCodeLocation sourceCodeLocation;
+
+  // TODO review if this parameters make sense here
+  private boolean enabled = true;
+  private List<ComponentAst> allNestedComponentsAst;
+  private Class<?> type;
+  private Object beanDefinition;
+  private Object beanReference;
+  private TypedComponentIdentifier.ComponentType componentType;
+  private Object objectInstance;
 
   public ComponentLocation getComponentLocation() {
     return componentLocation;
@@ -54,17 +69,109 @@ public abstract class ComponentAst implements HasParametersAst {
     return copyOf(parametersMap.values());
   }
 
+  public boolean isEnabled() {
+    return enabled;
+  }
+
+  public Class<?> getType() {
+    return type;
+  }
+
+  public Optional<TypedComponentIdentifier.ComponentType> getComponentType() {
+    return ofNullable(componentType);
+  }
+
+  @Override
+  public List<ComponentAst> getNestedComponentsAst() {
+    return getParameters().stream()
+        .filter(parameterAst -> parameterAst.getValue() instanceof ComplexParameterValueAst)
+        .map(parameterAst -> parameterAst.getValueAsComplexParameterValueAst().getComponent())
+        .collect(Collectors.toList());
+  }
+
+  @Override
+  public List<ComponentAst> getAllNestedComponentAst() {
+    return getNestedComponentsAst();
+  }
+
   /**
    * Provides access to all the {@link SimpleParameterValueAst} including the ones from nested components.
    * 
    * @return all the {@link SimpleParameterValueAst} including nested ones.
    */
-  public List<SimpleParameterValueAst> getNestedSimpleParameterValues() {
+  public List<Pair<ComponentAst, SimpleParameterValueAst>> getNestedSimpleParameterValues() {
     return parametersMap.values().stream()
         .filter(parameterAst -> parameterAst.getValue() instanceof SimpleParameterValueAst)
-        .map(parameterAst -> (SimpleParameterValueAst) parameterAst.getValue())
+        .map(parameterAst -> new Pair<>(this, parameterAst.getValueAsSimpleParameterValueAst()))
         .collect(Collectors.toList());
   }
+
+  public List<ComponentAst> getAllNestedComponentAstRecursively() {
+    if (allNestedComponentsAst == null) {
+      allNestedComponentsAst = unmodifiableList(parametersMap.values().stream()
+          .filter(parameterAst -> parameterAst.getValue() instanceof ComplexParameterValueAst)
+          .map(parameterAst -> parameterAst.getValueAsComplexParameterValueAst().getComponent())
+          .collect(Collectors.toList()));
+    }
+    return allNestedComponentsAst;
+  }
+
+  public Optional<ParameterAst> getNameParameter() {
+    return getParameter(NAME_PARAMETER_IDENTIFIER);
+  }
+
+  // TODO move this to optional
+  public String getNameParameterValueOrNull() {
+    return getParameter(NAME_PARAMETER_IDENTIFIER)
+        .map(parameterAst -> parameterAst.getValueAsSimpleParameterValueAst().getResolvedValueResult())
+        .filter(resolvedValue -> resolvedValue.isRight())
+        .map(resolvedValue -> resolvedValue.getRight().getResolvedValue().toString())
+        .orElse(null);
+  }
+
+  public Optional<String> getSameNamespaceSimpleParameterValue(String parameterName) {
+    return getParameter(ComponentIdentifier.builder().namespace(DslConstants.CORE_PREFIX).name(parameterName).build())
+        .map(parameterAst -> parameterAst.getValueAsSimpleParameterValueAst().getResolvedValueResult())
+        .filter(resolvedValue -> resolvedValue.isRight())
+        .map(resolvedValue -> resolvedValue.getRight().getResolvedValue().toString());
+  }
+
+  public void setEnabled(boolean enabled) {
+    this.enabled = enabled;
+  }
+
+  /**
+   * @param type the type of the object to be created when processing this {@code ComponentModel}.
+   */
+  public void setType(Class<?> type) {
+    this.type = type;
+  }
+
+  public Object getBeanDefinition() {
+    return beanDefinition;
+  }
+
+  public void setBeanDefinition(Object beanDefinition) {
+    this.beanDefinition = beanDefinition;
+  }
+
+  public Object getBeanReference() {
+    return beanReference;
+  }
+
+  public void setBeanReference(Object beanReference) {
+    this.beanReference = beanReference;
+  }
+
+  public Object getObjectInstance() {
+    return objectInstance;
+  }
+
+  public void setComponentLocation(ComponentLocation componentLocation) {
+    this.componentLocation = componentLocation;
+  }
+
+
 
   public static abstract class ComponentAstBuilder<T extends ComponentAstBuilder, BuilderType extends ComponentAst> {
 

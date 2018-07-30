@@ -6,6 +6,6 @@
  */
 package org.mule.runtime.api.artifact.ast;
 
-public class ProcessorComponentAst extends ComponentAst {
+public abstract class ProcessorComponentAst extends ComponentAst {
 
 }
