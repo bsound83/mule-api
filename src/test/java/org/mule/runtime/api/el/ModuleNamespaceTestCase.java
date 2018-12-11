@@ -15,18 +15,18 @@ public class ModuleNamespaceTestCase {
 
   @Test
   public void shouldNormalizeNamespaceFromCamelCase() throws Exception {
-    assertThat(new ModuleNamespace("myCamelCase").toString(), is("MyCamelCase"));
+    assertThat(new ModuleNamespace("myCamelCase").toString(), is("MyCamelCase asdasd"));
   }
 
   @Test
   public void shouldNormalizeNamespaceFromHyphenized() throws Exception {
-    assertThat(new ModuleNamespace("my-hyphen-Case").toString(), is("MyHyphenCase"));
+    assertThat(new ModuleNamespace("my-hyphen-Case").toString(), is("MyHyphenCase asdasd"));
   }
 
   @Test
   public void shouldNormalizeNamespaceWithNumbers() throws Exception {
     assertThat(new ModuleNamespace("my 29 name I18n with  num 3 rs or numb3rs").toString(),
-               is("My29NameI18nWithNum3RsOrNumb3rs"));
+               is("My29NameI18nWithNum3RsOrNumb3rs sdasd"));
   }
 
   @Test
