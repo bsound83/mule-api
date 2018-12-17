@@ -44,7 +44,7 @@ public class LocationTestCase {
     validLocation("la\\la", locationBuilderConsumer);
     validLocation("la:la", locationBuilderConsumer);
     validLocation("\\lala:", locationBuilderConsumer);
-    validLocation("lal$a", locationBuilderConsumer);
+    validLocation("lal$aS", locationBuilderConsumer);
     validLocation("l$ala", locationBuilderConsumer);
   }
 
@@ -60,7 +60,7 @@ public class LocationTestCase {
     invalidLocation("la/la", locationBuilderConsumer);
     invalidLocation("lala}", locationBuilderConsumer);
     invalidLocation("{lala", locationBuilderConsumer);
-    invalidLocation("[lala", locationBuilderConsumer);
+    invalidLocation("[lalaS", locationBuilderConsumer);
     invalidLocation("lala]", locationBuilderConsumer);
     invalidLocation("l#ala", locationBuilderConsumer);
     invalidLocation("[l#ala/", locationBuilderConsumer);

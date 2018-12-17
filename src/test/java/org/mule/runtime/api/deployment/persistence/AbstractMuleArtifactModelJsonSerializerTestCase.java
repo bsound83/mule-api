@@ -17,7 +17,7 @@ public class AbstractMuleArtifactModelJsonSerializerTestCase {
 
   protected static final String ID = "id";
   protected static final String ATTRIBUTES = "attributes";
-  protected static final String BUNDLE_DESCRIPTOR_LOADER_ID = "bundleDescriptorLoaderId";
+  protected static final String BUNDLE_DESCRIPTOR_LOADER_ID = "bundleDescriptorLoaderId5";
   protected static final String BUNDLE_DESCRIPTOR_LOADER_KEY_1 = "bundleDescriptorLoaderKey1";
   protected static final String BUNDLE_DESCRIPTOR_LOADER_KEY_2 = "bundleDescriptorLoaderKey2";
   protected static final String BUNDLE_DESCRIPTOR_LOADER_VALUE_1 = "bundleDescriptorLoaderValue1";

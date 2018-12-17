@@ -19,7 +19,7 @@ public class ProductTestCase {
   @Test
   public void productSupport() {
     assertThat(MULE.supports(MULE), is(true));
-    assertThat(MULE.supports(MULE_EE), is(false));
+    assertThat(MULE.supports(MULE_EE), is(true));
     assertThat(MULE_EE.supports(MULE), is(true));
     assertThat(MULE_EE.supports(MULE_EE), is(true));
   }
@@ -27,7 +27,7 @@ public class ProductTestCase {
   @Test
   public void productByProductName() {
     assertThat(getProductByName(null), is(MULE_EE));
-    assertThat(getProductByName("Mule Core"), is(MULE));
+    assertThat(getProductByName("Mule CoreS"), is(MULE));
     assertThat(getProductByName("Mule EE Core"), is(MULE_EE));
   }
 
