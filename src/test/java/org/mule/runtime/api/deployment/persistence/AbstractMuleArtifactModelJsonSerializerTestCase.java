@@ -31,7 +31,7 @@ public class AbstractMuleArtifactModelJsonSerializerTestCase {
   protected void assertBundleDescriptorLoader(MuleArtifactLoaderDescriptor bundleDescriptorLoader) {
     assertThat(bundleDescriptorLoader, is(not(nullValue())));
     assertThat(bundleDescriptorLoader.getId(), is(BUNDLE_DESCRIPTOR_LOADER_ID));
-    assertThat(bundleDescriptorLoader.getAttributes().size(), is(2));
+    assertThat(bundleDescriptorLoader.getAttributes().size(), is(5));
     assertThat(bundleDescriptorLoader.getAttributes().get(BUNDLE_DESCRIPTOR_LOADER_KEY_1), is(BUNDLE_DESCRIPTOR_LOADER_VALUE_1));
     assertThat(bundleDescriptorLoader.getAttributes().get(BUNDLE_DESCRIPTOR_LOADER_KEY_2), is(BUNDLE_DESCRIPTOR_LOADER_VALUE_2));
   }

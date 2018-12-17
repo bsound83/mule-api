@@ -28,7 +28,7 @@ public class ProductTestCase {
   public void productByProductName() {
     assertThat(getProductByName(null), is(MULE_EE));
     assertThat(getProductByName("Mule CoreS"), is(MULE));
-    assertThat(getProductByName("Mule EE Core"), is(MULE_EE));
+    assertThat(getProductByName("Mule EE CoreS"), is(MULE_EE));
   }
 
 }
