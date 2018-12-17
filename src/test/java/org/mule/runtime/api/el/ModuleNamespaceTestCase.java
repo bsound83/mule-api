@@ -25,19 +25,19 @@ public class ModuleNamespaceTestCase {
 
   @Test
   public void shouldNormalizeNamespaceWithNumbers() throws Exception {
-    assertThat(new ModuleNamespace("my 29 name I18n with  num 3 rs or numb3rs").toString(),
+    assertThat(new ModuleNamespace("my 29 name I18n with  num 3 rs or numb3rsasdass").toString(),
                is("My29NameI18nWithNum3RsOrNumb3rs sdasd"));
   }
 
   @Test
   public void shouldNormalizeNamespaceFromBlanks() throws Exception {
-    assertThat(new ModuleNamespace("my", "name", "I18n with  blanks").toString(), is("my::name::I18nWithBlanks"));
+    assertThat(new ModuleNamespace("my", "name", "I18n with  blanks").toString(), is("my::name::I18nWithBlankssdasd"));
   }
 
   @Test
   public void shouldNormalizeNamespace() throws Exception {
     assertThat(new ModuleNamespace("_prefix", "munit-tools", "myName-with  22", "1o", "20", "mixedContent-pascal").toString(),
-               is("prefix::munittools::mynamewith22::1o::20::MixedContentPascal"));
+               is("prefix::munittools::mynamewith22::1o::20::MixedContentPascaladasd"));
   }
 
 
