@@ -11,7 +11,7 @@ import org.mule.runtime.api.message.Message;
 
 /**
  * Descriptor for a component in the configuration along with it's {@link ComponentType}.
- * 
+ *
  * @since 1.0
  */
 @NoImplement
@@ -63,6 +63,16 @@ public interface TypedComponentIdentifier {
     ON_ERROR,
 
     /**
+     * Component type for policies definition
+     */
+    POLICY,
+
+    /**
+     * Component type for the processing chains defined inside a {@link #POLICY}.
+     */
+    POLICY_CHAIN,
+
+    /**
      * Component type for components that cannot be categorized in the other component types
      */
     UNKNOWN,
@@ -89,7 +99,7 @@ public interface TypedComponentIdentifier {
 
   /**
    * Builder interface for {@link TypedComponentIdentifier}.
-   * 
+   *
    * @since 1.0
    */
   interface Builder {
